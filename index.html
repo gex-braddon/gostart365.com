@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -59,7 +60,7 @@
   .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
   .card { background: var(--white); border: 1px solid var(--grey-200); border-radius: 10px; padding: 28px 24px; transition: box-shadow 0.2s, transform 0.15s; cursor: default; }
   .card:hover { box-shadow: 0 6px 24px rgba(12,31,63,0.08); transform: translateY(-2px); }
-  .card-icon { width: 44px; height: 44px; background: var(--blue-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; font-size: 20px; color: var(--blue-accent); }
+  .card-icon { width: 44px; height: 44px; background: var(--blue-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; font-size: 20px; }
   .card h3 { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--blue-dark); margin-bottom: 8px; letter-spacing: -0.2px; }
   .card p { font-size: 14px; color: var(--grey-400); line-height: 1.6; }
   .cta-banner { background: var(--blue-dark); border-radius: 12px; padding: 48px 40px; display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
@@ -68,7 +69,7 @@
   .product-list { display: flex; flex-direction: column; gap: 16px; }
   .product-row { background: var(--white); border: 1px solid var(--grey-200); border-radius: 10px; padding: 24px 28px; display: flex; align-items: flex-start; gap: 20px; transition: box-shadow 0.2s; }
   .product-row:hover { box-shadow: 0 4px 16px rgba(12,31,63,0.07); }
-  .product-icon { width: 48px; height: 48px; background: var(--blue-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--blue-accent); flex-shrink: 0; }
+  .product-icon { width: 48px; height: 48px; background: var(--blue-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
   .product-info h3 { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--blue-dark); margin-bottom: 5px; letter-spacing: -0.2px; }
   .product-info p { font-size: 14px; color: var(--grey-400); line-height: 1.6; }
   .product-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
@@ -80,18 +81,36 @@
   .values-list { list-style: none; margin-top: 24px; display: flex; flex-direction: column; gap: 14px; }
   .values-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: var(--grey-700); }
   .values-list li::before { content: ''; width: 20px; height: 20px; background: var(--blue-accent); border-radius: 50%; flex-shrink: 0; margin-top: 2px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: center; }
+
+  /* ── Contact form ── */
   .contact-card { background: var(--white); border: 1px solid var(--grey-200); border-radius: 12px; padding: 36px; }
   .contact-card h3 { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--blue-dark); margin-bottom: 24px; letter-spacing: -0.3px; }
   .form-group { margin-bottom: 18px; }
   .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--grey-700); margin-bottom: 6px; }
-  .form-group input, .form-group textarea { width: 100%; padding: 11px 14px; border: 1px solid var(--grey-200); border-radius: 7px; font-family: var(--font-body); font-size: 14px; color: var(--grey-700); background: var(--grey-100); outline: none; transition: border-color 0.15s; }
-  .form-group input:focus, .form-group textarea:focus { border-color: var(--blue-accent); background: var(--white); }
+  .form-group input,
+  .form-group textarea { width: 100%; padding: 11px 14px; border: 1px solid var(--grey-200); border-radius: 7px; font-family: var(--font-body); font-size: 14px; color: var(--grey-700); background: var(--grey-100); outline: none; transition: border-color 0.15s; }
+  .form-group input:focus,
+  .form-group textarea:focus { border-color: var(--blue-accent); background: var(--white); }
+  .form-group input[aria-invalid="true"],
+  .form-group textarea[aria-invalid="true"] { border-color: #e53e3e; }
   .form-group textarea { resize: vertical; min-height: 100px; }
+  .fs-field-error { font-size: 12px; color: #e53e3e; margin-top: 4px; display: block; }
+  .fs-form-error { background: #fff5f5; border: 1px solid #feb2b2; color: #c53030; border-radius: 7px; padding: 12px 16px; font-size: 13px; margin-bottom: 16px; }
+  .fs-form-success { background: #f0fff4; border: 1px solid #9ae6b4; color: #276749; border-radius: 10px; padding: 28px 24px; text-align: center; }
+  .fs-form-success .success-icon { font-size: 36px; margin-bottom: 12px; }
+  .fs-form-success h4 { font-family: var(--font-display); font-size: 18px; font-weight: 700; margin-bottom: 6px; color: #276749; }
+  .fs-form-success p { font-size: 14px; color: #276749; opacity: 0.85; }
+  .submit-btn { width: 100%; text-align: center; display: block; padding: 13px; font-size: 15px; border-radius: 7px; font-family: var(--font-body); cursor: pointer; }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* ── Contact info panel ── */
+  .contact-info-panel { background: var(--grey-100); border-radius: 10px; padding: 8px 20px; }
   .contact-info-item { display: flex; align-items: flex-start; gap: 14px; padding: 18px 0; border-bottom: 1px solid var(--grey-200); font-size: 14px; }
   .contact-info-item:last-child { border-bottom: none; }
   .ci-icon { width: 36px; height: 36px; background: var(--blue-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
   .ci-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; color: var(--grey-400); margin-bottom: 3px; }
   .ci-value { color: var(--grey-700); font-weight: 400; }
+
   footer { background: var(--blue-dark); color: rgba(255,255,255,0.5); padding: 32px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 13px; }
   footer .wordmark { color: var(--white); font-size: 16px; cursor: pointer; }
   footer .wordmark span { color: #60AAEE; }
@@ -111,7 +130,7 @@
   </ul>
 </nav>
 
-<!-- HOME -->
+<!-- ═══════════════ HOME ═══════════════ -->
 <div class="page active" id="page-home">
   <div class="hero">
     <div class="hero-inner">
@@ -137,26 +156,10 @@
     <div class="section-title">Complete IT infrastructure, fully managed.</div>
     <div class="section-sub">From network routing to cloud compute, we supply, install, support and manage every layer of your business technology.</div>
     <div class="cards-grid">
-      <div class="card">
-        <div class="card-icon">⬡</div>
-        <h3>Network Infrastructure</h3>
-        <p>Enterprise routing, switching, and wireless networks designed for performance and reliability.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">◎</div>
-        <h3>Telephony &amp; Video</h3>
-        <p>Unified communications, IP telephony, and video conferencing that keeps teams connected.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">▦</div>
-        <h3>Compute &amp; Storage</h3>
-        <p>Scalable server and storage solutions — on-premise, hybrid, or cloud-delivered.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🛡</div>
-        <h3>Managed Services</h3>
-        <p>Proactive monitoring, incident response and ongoing management so your team can focus on the business.</p>
-      </div>
+      <div class="card"><div class="card-icon">⬡</div><h3>Network Infrastructure</h3><p>Enterprise routing, switching, and wireless networks designed for performance and reliability.</p></div>
+      <div class="card"><div class="card-icon">◎</div><h3>Telephony &amp; Video</h3><p>Unified communications, IP telephony, and video conferencing that keeps teams connected.</p></div>
+      <div class="card"><div class="card-icon">▦</div><h3>Compute &amp; Storage</h3><p>Scalable server and storage solutions — on-premise, hybrid, or cloud-delivered.</p></div>
+      <div class="card"><div class="card-icon">🛡</div><h3>Managed Services</h3><p>Proactive monitoring, incident response and ongoing management so your team can focus on the business.</p></div>
     </div>
   </div>
 
@@ -171,7 +174,7 @@
   </div>
 </div>
 
-<!-- SERVICES -->
+<!-- ═══════════════ SERVICES ═══════════════ -->
 <div class="page" id="page-services">
   <div class="hero" style="padding: 60px 40px 56px;">
     <div class="hero-inner">
@@ -186,26 +189,10 @@
     <div class="section-title">Everything covered, always on.</div>
     <div class="section-sub">We manage your entire network environment so your team can focus on the business.</div>
     <div class="cards-grid">
-      <div class="card">
-        <div class="card-icon">🛡</div>
-        <h3>Managed Network</h3>
-        <p>Proactive monitoring and management of your routing, switching, and wireless infrastructure around the clock.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">📞</div>
-        <h3>Managed Telephony</h3>
-        <p>End-to-end management of your voice and video systems — from handsets to cloud calling platforms.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">💾</div>
-        <h3>Managed Compute</h3>
-        <p>Server, virtualisation, and storage environments managed and optimised to keep your data accessible and secure.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">📊</div>
-        <h3>Reporting &amp; Insights</h3>
-        <p>Monthly performance reporting and capacity planning driven by real-time data and intelligent analytics.</p>
-      </div>
+      <div class="card"><div class="card-icon">🛡</div><h3>Managed Network</h3><p>Proactive monitoring and management of your routing, switching, and wireless infrastructure around the clock.</p></div>
+      <div class="card"><div class="card-icon">📞</div><h3>Managed Telephony</h3><p>End-to-end management of your voice and video systems — from handsets to cloud calling platforms.</p></div>
+      <div class="card"><div class="card-icon">💾</div><h3>Managed Compute</h3><p>Server, virtualisation, and storage environments managed and optimised to keep your data accessible and secure.</p></div>
+      <div class="card"><div class="card-icon">📊</div><h3>Reporting &amp; Insights</h3><p>Monthly performance reporting and capacity planning driven by real-time data and intelligent analytics.</p></div>
     </div>
   </div>
 
@@ -216,26 +203,10 @@
     <div class="section-title">Design, deploy, and integrate.</div>
     <div class="section-sub">We don't just sell technology — we design and implement solutions that fit your exact environment.</div>
     <div class="cards-grid">
-      <div class="card">
-        <div class="card-icon">📐</div>
-        <h3>Network Design</h3>
-        <p>Architecture consulting and solution design tailored to your performance, security, and budget requirements.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🔧</div>
-        <h3>Installation &amp; Deployment</h3>
-        <p>Professional on-site installation with minimal disruption, delivered on time and on budget.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🔄</div>
-        <h3>Migration &amp; Upgrades</h3>
-        <p>Seamless technology migrations and lifecycle upgrades — planned carefully, executed cleanly.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🔒</div>
-        <h3>Security &amp; Compliance</h3>
-        <p>Network security assessments, firewall configuration, and ongoing compliance support.</p>
-      </div>
+      <div class="card"><div class="card-icon">📐</div><h3>Network Design</h3><p>Architecture consulting and solution design tailored to your performance, security, and budget requirements.</p></div>
+      <div class="card"><div class="card-icon">🔧</div><h3>Installation &amp; Deployment</h3><p>Professional on-site installation with minimal disruption, delivered on time and on budget.</p></div>
+      <div class="card"><div class="card-icon">🔄</div><h3>Migration &amp; Upgrades</h3><p>Seamless technology migrations and lifecycle upgrades — planned carefully, executed cleanly.</p></div>
+      <div class="card"><div class="card-icon">🔒</div><h3>Security &amp; Compliance</h3><p>Network security assessments, firewall configuration, and ongoing compliance support.</p></div>
     </div>
   </div>
 
@@ -250,7 +221,7 @@
   </div>
 </div>
 
-<!-- PRODUCTS -->
+<!-- ═══════════════ PRODUCTS ═══════════════ -->
 <div class="page" id="page-products">
   <div class="hero" style="padding: 60px 40px 56px;">
     <div class="hero-inner">
@@ -264,19 +235,13 @@
     <div class="section-label">Solution Categories</div>
     <div class="section-title">The technology we supply and support.</div>
     <div class="section-sub">We partner with world-class vendors to bring you enterprise solutions at competitive prices.</div>
-
     <div class="product-list">
       <div class="product-row">
         <div class="product-icon">🌐</div>
         <div class="product-info">
           <h3>Network Routing &amp; Switching</h3>
           <p>Enterprise and SMB routing, core and access layer switching, SD-WAN, and network security appliances. Designed for high availability and performance.</p>
-          <div class="product-tags">
-            <span class="tag">Cisco</span>
-            <span class="tag">Meraki</span>
-            <span class="tag">Fortinet</span>
-            <span class="tag">Palo Alto</span>
-          </div>
+          <div class="product-tags"><span class="tag">Cisco</span><span class="tag">Meraki</span><span class="tag">Fortinet</span><span class="tag">Palo Alto</span></div>
         </div>
       </div>
       <div class="product-row">
@@ -284,12 +249,7 @@
         <div class="product-info">
           <h3>Wireless Networks</h3>
           <p>Indoor and outdoor Wi-Fi 6/6E solutions, wireless controllers, and cloud-managed access points for seamless, secure connectivity across any environment.</p>
-          <div class="product-tags">
-            <span class="tag">Cisco</span>
-            <span class="tag">Meraki</span>
-            <span class="tag">Ubiquiti</span>
-            <span class="tag">Ruckus</span>
-          </div>
+          <div class="product-tags"><span class="tag">Cisco</span><span class="tag">Meraki</span><span class="tag">Ubiquiti</span><span class="tag">Ruckus</span></div>
         </div>
       </div>
       <div class="product-row">
@@ -297,12 +257,7 @@
         <div class="product-info">
           <h3>Telephony &amp; Video Conferencing</h3>
           <p>IP phone systems, cloud PBX, Microsoft Teams Rooms, Cisco Webex devices, and video conferencing infrastructure for modern hybrid workplaces.</p>
-          <div class="product-tags">
-            <span class="tag">Cisco</span>
-            <span class="tag">Meraki</span>
-            <span class="tag">HP</span>
-            <span class="tag">Ubiquiti</span>
-          </div>
+          <div class="product-tags"><span class="tag">Cisco</span><span class="tag">Meraki</span><span class="tag">HP</span><span class="tag">Ubiquiti</span></div>
         </div>
       </div>
       <div class="product-row">
@@ -310,12 +265,7 @@
         <div class="product-info">
           <h3>Compute &amp; Storage</h3>
           <p>Rack servers, hyper-converged infrastructure, SAN/NAS storage, virtualisation platforms, and cloud integration for scalable data centre environments.</p>
-          <div class="product-tags">
-            <span class="tag">HP</span>
-            <span class="tag">Dell</span>
-            <span class="tag">Cisco</span>
-            <span class="tag">Fortinet</span>
-          </div>
+          <div class="product-tags"><span class="tag">HP</span><span class="tag">Dell</span><span class="tag">Cisco</span><span class="tag">Fortinet</span></div>
         </div>
       </div>
       <div class="product-row">
@@ -323,12 +273,7 @@
         <div class="product-info">
           <h3>Network Security</h3>
           <p>Next-generation firewalls, intrusion prevention, zero-trust access, and unified threat management to protect your business from evolving threats.</p>
-          <div class="product-tags">
-            <span class="tag">Palo Alto</span>
-            <span class="tag">Fortinet</span>
-            <span class="tag">Cisco</span>
-            <span class="tag">Meraki</span>
-          </div>
+          <div class="product-tags"><span class="tag">Palo Alto</span><span class="tag">Fortinet</span><span class="tag">Cisco</span><span class="tag">Meraki</span></div>
         </div>
       </div>
     </div>
@@ -339,26 +284,14 @@
     <div class="section-title">More than just a reseller.</div>
     <div class="section-sub">Every product we supply comes backed by our expertise, configuration services, and ongoing managed support.</div>
     <div class="cards-grid">
-      <div class="card">
-        <div class="card-icon">💰</div>
-        <h3>Competitive Pricing</h3>
-        <p>Our streamlined operations mean lower overhead — and we pass those savings on through better pricing and bundled support.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🎯</div>
-        <h3>Right-Fit Solutions</h3>
-        <p>We scope and specify the right technology for your needs — not the most expensive option, the correct one.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🔩</div>
-        <h3>Configured &amp; Ready</h3>
-        <p>Devices arrive pre-staged and configured. We handle setup, testing, and documentation.</p>
-      </div>
+      <div class="card"><div class="card-icon">💰</div><h3>Competitive Pricing</h3><p>Our streamlined operations mean lower overhead — and we pass those savings on through better pricing and bundled support.</p></div>
+      <div class="card"><div class="card-icon">🎯</div><h3>Right-Fit Solutions</h3><p>We scope and specify the right technology for your needs — not the most expensive option, the correct one.</p></div>
+      <div class="card"><div class="card-icon">🔩</div><h3>Configured &amp; Ready</h3><p>Devices arrive pre-staged and configured. We handle setup, testing, and documentation.</p></div>
     </div>
   </div>
 </div>
 
-<!-- ABOUT & CONTACT -->
+<!-- ═══════════════ ABOUT & CONTACT ═══════════════ -->
 <div class="page" id="page-about">
   <div class="hero" style="padding: 60px 40px 56px;">
     <div class="hero-inner">
@@ -370,6 +303,8 @@
 
   <div class="section">
     <div class="about-grid">
+
+      <!-- Left: story -->
       <div class="about-content">
         <div class="section-label">Our Story</div>
         <h2>Network expertise you can rely on.</h2>
@@ -383,29 +318,51 @@
           <li><strong>Cost-Effective</strong> — our streamlined approach passes savings directly to you</li>
         </ul>
       </div>
+
+      <!-- Right: form + contact info -->
       <div>
         <div class="contact-card" style="margin-bottom:20px;">
           <h3>Get in touch</h3>
-          <div class="form-group">
-            <label>Your name</label>
-            <input type="text" placeholder="Jane Smith">
+
+          <!-- Success state (hidden until submission) -->
+          <div id="form-success" class="fs-form-success" style="display:none;">
+            <div class="success-icon">✅</div>
+            <h4>Message sent!</h4>
+            <p>Thanks for reaching out. We'll get back to you shortly at the email address you provided.</p>
           </div>
-          <div class="form-group">
-            <label>Email address</label>
-            <input type="email" placeholder="jane@company.com.au">
-          </div>
-          <div class="form-group">
-            <label>Company</label>
-            <input type="text" placeholder="Acme Pty Ltd">
-          </div>
-          <div class="form-group">
-            <label>How can we help?</label>
-            <textarea placeholder="Tell us about your IT infrastructure needs..."></textarea>
-          </div>
-          <span class="btn-primary" style="width:100%; text-align:center; display:block; padding: 13px;">Send Message</span>
+
+          <!-- Form-level error banner -->
+          <div id="form-error-banner" class="fs-form-error" style="display:none;"></div>
+
+          <!-- The form -->
+          <form id="contact-form" novalidate>
+            <div class="form-group">
+              <label for="cf-name">Your name</label>
+              <input type="text" id="cf-name" name="name" placeholder="Jane Smith" required data-fs-field>
+              <span class="fs-field-error" data-fs-error="name"></span>
+            </div>
+            <div class="form-group">
+              <label for="cf-email">Email address</label>
+              <input type="email" id="cf-email" name="email" placeholder="jane@company.com.au" required data-fs-field>
+              <span class="fs-field-error" data-fs-error="email"></span>
+            </div>
+            <div class="form-group">
+              <label for="cf-company">Company</label>
+              <input type="text" id="cf-company" name="company" placeholder="Acme Pty Ltd" data-fs-field>
+            </div>
+            <div class="form-group">
+              <label for="cf-message">How can we help?</label>
+              <textarea id="cf-message" name="message" placeholder="Tell us about your IT infrastructure needs..." required data-fs-field></textarea>
+              <span class="fs-field-error" data-fs-error="message"></span>
+            </div>
+            <button type="submit" id="submit-btn" class="btn-primary submit-btn" data-fs-submit-btn>
+              Send Message
+            </button>
+          </form>
         </div>
 
-        <div style="background: var(--grey-100); border-radius: 10px; padding: 8px 20px;">
+        <!-- Contact details -->
+        <div class="contact-info-panel">
           <div class="contact-info-item">
             <div class="ci-icon">🌐</div>
             <div><div class="ci-label">Website</div><div class="ci-value">gostart365.com</div></div>
@@ -424,6 +381,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
@@ -435,14 +393,38 @@
 </footer>
 
 <script>
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  var navEl = document.getElementById('nav-' + id);
-  if (navEl) navEl.classList.add('active');
-  window.scrollTo(0, 0);
-}
+  /* ── Page navigation ── */
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('.nav-links a').forEach(function(a) { a.classList.remove('active'); });
+    document.getElementById('page-' + id).classList.add('active');
+    var navEl = document.getElementById('nav-' + id);
+    if (navEl) navEl.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  /* ── Formspree AJAX integration ── */
+  window.formspree = window.formspree || function() { (formspree.q = formspree.q || []).push(arguments); };
+  formspree('initForm', {
+    formElement: '#contact-form',
+    formId: 'mdavegkp',
+    onSuccess: function() {
+      document.getElementById('contact-form').style.display = 'none';
+      document.getElementById('form-error-banner').style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+    },
+    onError: function(errs) {
+      var banner = document.getElementById('form-error-banner');
+      if (errs && errs.getFormErrors && errs.getFormErrors().length) {
+        banner.textContent = errs.getFormErrors().map(function(e) { return e.message; }).join(' ');
+        banner.style.display = 'block';
+      } else {
+        banner.textContent = 'Something went wrong. Please try again or email us directly at info@gostart365.com.';
+        banner.style.display = 'block';
+      }
+    }
+  });
 </script>
+
 </body>
 </html>
